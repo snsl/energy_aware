@@ -1,0 +1,9 @@
+Here are some suggested plots:
+
+a. Configuration 1 vs. configuration 2 - probably should use names like combinatorial vs. sequential.  Maybe a bar graph (two bars for each configuration) with the y axis for total energy consumption and the x axis will be for different numbers of I/O nodes.  Leave the number of energy nodes fixed at 4 or 8.
+
+b. A line graph showing the total energy consumption vs. number of energy nodes.  There will be 4 lines for 8, 16, 32 and 64 I/O nodes.  Depending on how the graph looks, you may want to swap things so that the x axis is number of I/O nodes and the lines are for the different energy nodes.
+
+c. Another graph comparing total energy consumption to threshold.  Different lines for number of I/O nodes.  Keep number of energy nodes fixed at 4 or 8.
+
+You may not need any more graphs.

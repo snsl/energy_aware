@@ -1,0 +1,212 @@
+In this section, we present a mathematical model to estimate the outcome
+of the proposed methods with varying parameters. We are particularly interested
+in estimating the energy consumption, latency per access and load balance as the outcomes
+of the system. The methods we proposed distribute jobs in a workload across
+all of the storage nodes, eventually creating time interval series on each
+storage node. The main driving parameter of the mathematical model is these series of
+time intervals. We consider three different time intervals;
+\textit{interjobs, interarrivals} and \textit{job lengths}. Interjob is
+the interval between the completion of a job and the start of the next
+job. Interarrival is the interval between the start of a job and the
+start of the next job. Job length is the interval between the start and
+completion of a job. We collect these time series data for each workload
+and storage node and fit them to probability distribution models in order
+to estimate the energy consumption, latency per access and load balance.
+
+In the proposed mathematical model, time series can be fitted to different
+probability distribution models depending on the workload and the number
+of jobs assigned to a storage node. As each workload can be fitted to
+different probability distribution models on each storage node, we use
+$F(t)$ to represent the cumulative distribution function (CDF) at this
+point for ease of presentation. By definiton of the cumulative distribution function, $F_{X}(t)$ represents
+the probability that the random variable $X$, i.e. the interarrival
+time between jobs, is smaller than or equal to $t$.
+$F(t)$ is replaced with the actual CDF
+of each workload in Section~\ref{validate_model}.
+%Similarly, $F(X+1) - F(X)$ represents the probability that the random variable
+%$t$ is equal to $X$.
+
+\subsection{Energy Consumption}
+We first estimate the energy consumption of a storage node.
+The average job length
+on a storage node without taking any latencies into account can be
+calculated by
+looking at the jobs on a storage node and taking their average as shown in 
+Equation~\eqref{eq_math_one}, where $N_{J}$ is the number of jobs on a
+storage node, $J_{avg}$ is the average job length without latencies and $J(k)$
+is the length of an individual job.
+
+\begin{equation}
+J_{avg} = \frac{\sum\limits_{k=1}^{N_{J}} J(k)}{N_{J}}
+\label{eq_math_one}
+\end{equation}  
+\hfill
+
+In order to estimate the impact of job latencies,
+we consider four different cases for the interjob
+times:
+
+\begin{itemize}
+\item The interjob time
+is greater than the sum of the inactivity threshold ($T_I$) and the
+startup time ($T_S$).
+In this case, even if the job finishing before the interjob period experiences
+latency, the interjob time will still be greater than the inactivity threshold and
+therefore will cause the storage node to be turned off. In this case,
+the next job
+assigned to this storage node will experience latency equal to the startup
+time, since it will have to wait for the storage node to be turned
+on. The average latency impact is the probability that the interjob time
+is larger than $(T_I+T_S)$ multiplied by $(T_I+T_S)$, or
+$(1-F_{T_I+T_S}(t))*(T_I+T_S))$.
+
+\item The interjob time
+is greater than the inactivity threshold, but smaller than or equal to the sum of
+the inactivity threshold and startup time. In this case, if the job finishing
+before the interjob period experiences latency, the interjob time might become smaller
+than the inactivity threshold. This will cause the storage node not to be turned
+off at all and therefore to miss the opportunity to reduce energy consumption.
+The average latency impact is the probability that the interjob time
+is between $T_I$ and $T_I+T_S$ multiplied by
+the interjob time, or $\int_{T_I}^{T_I+T_S}tF'(t)dt$.
+
+\item The interjob time is
+smaller than or equal to the inactivity threshold, but greater than the startup time. In this
+case, even if the job finishing before the interjob period experiences latency,
+the storage system will stay on until the next job arrives.
+The average latency impact is the probability that the interjob time
+is between $T_S$ and $T_I$ multiplied by
+the interjob time, or $\int_{T_S}^{T_I}tF'(t)dt$.
+
+\item The interjob time
+is smaller than or equal to the startup time. In this case, if the job
+finishing before the interjob period experiences latency, it might overlap
+with the next job assigned to the storage node, as the latency it experiences
+(startup time) will be greater than the interjob time. If there is an overlap
+between jobs, that means we are reducing energy consumption.
+The average latency impact is the probability that the interjob time
+is less than $T_S$ multiplied by
+the interjob time, or $-\int_{0}^{T_S}tF'(t)dt$.
+\end{itemize}  
+
+Putting these impacts together, we can estimate the average
+job length with latencies as 
+shown in Equation~\eqref{eq_math_two}.
+
+\begin{equation}
+\label{eq_math_two}
+\begin{aligned}
+J_{avg}^{'} = J_{avg}\ \ &+ (1-F_{T_I+T_S}(t))*(T_I+T_S) \\
+                       &+ \int_{T_I}^{T_I+T_S}tF'(t)dt \\
+                       &+ \int_{T_S}^{T_I}tF'(t)dt \\
+                       &- \int_{0}^{T_S}tF'(t)dt
+\end{aligned}
+\end{equation}
+\hfill
+
+The total time ($T$) a storage node stays on (on-time) can be estimated by using
+the average job length with latencies ($J_{avg}^{'}$) and the number of jobs
+on a storage node ($N_J$). Then the total time can be multipled with power
+of a storage node to find the energy consumption, as shown in Equation~\eqref{eq_math_three}.
+
+\begin{equation}
+\begin{gathered}
+Energy\ \ consumption\ \ of\ \ a\ \ node = Power\ \ *\ \ T,\\
+where\ \ T\ \ = N_J\ \ *\ \ J_{avg}^{'}
+\end{gathered}
+\label{eq_math_three}
+\end{equation}
+\hfill
+
+\subsection{Load Balancing}
+Equation~\eqref{eq_math_three} shows the total time a storage node stays on;
+where $N_J$ is the number of jobs on that storage node and $J_{avg}^{'}$
+is the average job length with latencies. While balancing the on-time across
+all storage nodes, we consider the coefficient of variation (CV) of on-time,
+which is denoted by $CV_{T}$. Therefore, we can formulate balancing the
+on-time across storage nodes with Equation~\eqref{eq_math_four}.
+
+\begin{equation}
+\label{eq_math_four}
+CV_{T} = \frac{\sqrt[2]{\frac{\sum\limits_{i=1}^N (T_i - T_{mean}) ^ 2}{N}}}{T_{mean}};
+\end{equation}
+\hfill
+
+where $T_{mean}$ is found as follows, with $N$ being the number of storage nodes
+and $T_i$ being the total time storage node $i$ stays on;
+
+\begin{equation}
+\label{eq_math_five}
+T_{mean} = \frac{\sum\limits_{i=1}^N T_i}{N};
+\end{equation}
+\hfill
+
+Balancing storage space across storage nodes is represented with the same
+model shown in Equation~\eqref{eq_math_four}
+and~\eqref{eq_math_five}. The only difference will be using storage
+space instead of on-time. We model balancing the storage space across storage nodes with
+Equation~\eqref{eq_math_six}. $CV_{S}$ denotes the coefficient of
+variation of storage space across all nodes.
+
+\begin{equation}
+\label{eq_math_six}
+CV_{S} = \frac{\sqrt[2]{\frac{\sum\limits_{i=1}^N (S_i - S_{mean}) ^ 2}{N}}}{S_{mean}};
+\end{equation}
+\hfill
+
+where $S_{mean}$ is found as follows, with $N$ being the number of storage nodes
+and $S_i$ being the used storage space on node $i$;
+
+\begin{equation}
+\label{eq_math_seven}
+S_{mean} = \frac{\sum\limits_{i=1}^N S_i}{N};
+\end{equation}
+\hfill
+ 
+\subsection{Latency per Access}
+As discussed before, any job
+that is assigned to a turned-off storage node needs to wait for that node
+to startup, an operation that will take time equal to $T_S$.
+However, any subsequent job that is assigned to the same storage node before that
+node fully starts up will also experience latency. The latency
+experienced by these subsequent jobs will be smaller than $T_S$;
+therefore, we need to estimate the effective latency of jobs arriving
+to a storage node while that node is being started. In order to estimate
+the number of jobs arriving to a storage node in a certain period of time and
+to find out the latency experienced by each, we need to examine the
+interarrival times of a workload. After fitting interarrivals to
+probability distribution functions, we can estimate how many jobs will
+arrive to a storage node when it is being started.
+
+The first job that triggers the start of a turned-off storage node will
+always experience a latency that is equal to $T_S$. Any subsequent
+jobs that arrive to that storage node before it is fully turned on will experience
+a smaller amount of latency. Therefore, assuming a new job arrives every
+second, we can formulate the effective latency of a storage node as shown
+in Equation~\eqref{eq_math_eight}.
+
+\begin{equation}
+\label{eq_math_eight}
+t_{eff} = T_S + \int_{0}^{T_S} (T_S -
+t) * F'(t) dt
+\end{equation}
+\hfill
+ 
+In order to estimate latency per access, we need to take the average of
+effective latency values on all storage nodes. This is shown in
+Equation~\eqref{eq_math_nine}, where $t_{eff}(i)$
+is the effective latency on storage node $i$, $N_I(i)$ is the number
+of interjob periods on storage node $i$, $P_I(i)$ is the probability of an interjob period
+being greater than the inactivity threshold (therefore causing the next job to
+experience latency) and $N$ is the number of storage nodes in the system.
+
+\begin{equation}
+\begin{gathered}
+Latency\ \ per\ \ access = \frac{\sum\limits_{i=1}^N t_{eff}(i) * N_I(i) * P_I(i)}{N},
+\\
+\\
+where\ \ P_I\ \ =\ \ 1\ \ -\ \ F_{T_I}(t)\ \ on\ \ a\ \ storage\ \ node
+\end{gathered}
+\label{eq_math_nine}
+\end{equation}
+\hfill

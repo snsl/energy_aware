@@ -1,0 +1,92 @@
+The energy consumption of cloud systems has been studied extensively by the research
+community. Srikantaiah et al. reduce the energy consumption of cloud systems
+with workload consolidation while trying to find optimal performance
+energy trade-off points~\cite{Srikantaiah:2008:EAC:1855610.1855620}.
+In \cite{Kim:2009:PPC:1657120.1657121}, authors present energy aware provisioning
+of virtual machines in a cloud system. Harnik et al. investigate how cloud storage
+systems can operate at low-power modes while maximizing data availability and the
+number of nodes to power down~\cite{Harnik:2009:LPM:1586640.1587438}. Duy et al.
+propose a green scheduling algorithm to predict the future load in a cloud
+system and to turn off unused nodes~\cite{5470908}. CloudScale reserves resources
+based on usage in a multi-tenant cloud to reduce energy consumption~\cite{Shen:2011:CER:2038916.2038921}.
+Rabbit is a distributed file system trying to save energy by turning off nodes while
+making sure that at least primary data replicas are available~\cite{Amur:2010:RFP:1807128.1807164}.
+Beloglazov et al. present a model to detect an overloaded host and dynamically reallocate
+the virtual machines on that host for improved energy efficiency and
+performance~\cite{Beloglazov:2013:MOH:2498743.2498939}
+
+There also have been numerous studies to reduce the energy consumption of storage
+and file systems in general. Most existing energy saving techniques for these systems
+attempt to move less frequently used data to a subset of the nodes. Massive Array of Idle
+Disks~\cite{Colarelli:2002:MAI:762761.762819} (MAID) forms two groups of storage nodes in the
+system - \textit{active} and \textit{passive}. New requests are typically handled by the active
+nodes, and if not, they are forwarded to the passive nodes. MAID's performance, however, is
+dependent on the workload and cache characteristics.
+Popular Data Concentration~\cite{Pinheiro:2004:ECT:1006209.1006220} (PDC) is another similar
+technique where frequently accessed data is migrated to a group of storage nodes, called
+\textit{active} nodes. Before migrating data, PDC needs to predict the future load for each storage
+node. Although performing better than MAID for small workloads, PDC suffers from the overhead of
+data migration and load prediction.
+Wildani et al. present a technique that identifies and brings together data blocks in a workload
+for better energy management, based on the likelihood of related access~\cite{Wildani:2011:EIW:1987816.1987823}.
+GreenHDFS uses a hot\&cold zone approach, where frequently accessed data is located on the storage
+nodes in the hot zone and unpopular data is located on the storage nodes in the cold
+zone~\cite{Kaushik:2010:GTE:1924920.1924927}.
+Lightning is an energy-aware cloud storage system that divides the storage nodes into hot\&cold zones
+with data-classification driven data placement~\cite{Kaushik:2010:LSE:1851476.1851523}. The purpose of dividing
+the storage nodes into logical hot\&cold zones is to increase the idleness in the storage system.
+There have been other relevant studies that aimed directly at making better use of idle periods in a storage system.
+Mountroidou et al. presents a framework that identifies when and for how long to activate a power-saving
+mode to meet given performance\&power constraints~\cite{10.1109/IGCC.2011.6008570}. They also propose adaptive
+workload shaping to make use of the idle periods in a workload better~\cite{Mountrouidou:2011:AWS:1958746.1958766}.
+Write-offloading technique shows that enterprise workloads have idle periods as well and these periods
+can be increased further by offloading writes on spun-down disks to persistent storage~\cite{Narayanan:2008:WOP:1416944.1416949}.
+SRCMap is another technique where the workload is selectively consolidated on a subset of storage
+nodes, proportional to the I/O workload~\cite{Verma:2010:SEP:1855511.1855531}. These data-classification driven
+placement techniques work well only if one is able to predict data usage and idle period with reasonable
+accuracy.
+
+Hardware based techniques can also help with energy utilization but is
+not broadly applicable.
+Barroso et al. proposed that server components, particularly memory and disk
+subsystems, need improvements to consume power proportional to their utilization levels~\cite{33387}.
+Hibernator uses disks that can operate at different speeds to reduce energy consumption while trying to
+meet performance goals~\cite{Zhu:2005:HHD:1095810.1095828}.
+
+Architectural or file system optimizations present another opportunity
+to save energy.
+Ganesh et al.~\cite{GaneshWeatherspoonBalakrishnanBirman07_OptimizingPowerConsumptionInLargeScaleStorageSystems}
+has shown that the Log Structured Filesystem (LFS) can be used to reduce energy consumption, since
+the write requests are recorded in a log file making it possible to know on the client side which
+storage node will handle the write request. This approach suffers from the overhead of cleaning
+the log file.
+Leverich and Kozyrakis present a technique to reduce the energy consumption of Hadoop clusters using
+covering subsets to ensure data availability~\cite{Leverich:2010:EEH:1740390.1740405}. They find a trade-off
+between energy savings and overall performance of the system.
+Pergamum is a distributed archival storage system that saves energy by avoiding centralized controllers
+~\cite{Storer:2008:PRT:1364813.1364814}.
+Zhu et al. proposes power-aware storage cache management algorithms to keep the disks in low-power modes
+for longer~\cite{Zhu:2004:REC:1072448.1072462}.
+Diverted Access is another technique that exploits the redundancy in the storage systems to reduce
+energy consumption~\cite{Pinheiro:2006:ERC:1140277.1140281}.
+
+In more recent related studies, Chen et al. present the \textit{k-out-of-n computing} framework~\cite{6847230}
+with the goal of increasing fault-tolerance and energy-efficiency during storage system access and data
+processing. Eventhough, the random and greedy approaches used during the evaluations is similar
+to the methods we will propose, this work is tailored for mobile devices in a dynamic network and unlike our
+study, it is not concerned with load balancing. In~\cite{Collotta2015137}, the authors propose a fuzzy logic
+approach that tries to improve the energy-efficiency of Bluetooth Low Energy (BLE) network used in many
+Internet-of-Things environments, by predicting sleeping periods of devices in BLE network using their battery
+levels and throughput-to-workload ratios. Eventhough, the scope and parameters of this work is completely
+different than our approach, the authors show a method to benefit from idleness in a system using data from
+system components. Finally, Sallam et al. present a proactive workload manager that tries to avoid bursty loads and
+underutilization of resources that might be caused by a reactive workload manager in a virtual environment~\cite{Sallam:2014:PWM:2658292.2658555}.
+They proactively predict the future state of VMs by analyzing the recently observed patterns. This approach
+is similar to the future prediction method we will propose in Dynamic Greedy and Correlation-Based schemes; although,
+it is tailored for virtual environments.
+
+To the best of our knowledge, there has not been any related study trying to reduce energy consumption in 
+a cloud storage system by using user metadata. The most relevant to our work is the approach by Wildani et al.
+to group semantically-related data across the same set of devices to reduce the number of disk accesses resulting
+in disk spin-ups. However, they group related data, while we group related users together~\cite{5668053}.
+

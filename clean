@@ -1,0 +1,8 @@
+#!/bin/bash
+
+rm jcss.blg
+rm jcss.bbl
+rm jcss.aux
+rm jcss.out
+rm jcss.log
+rm jcss.spl

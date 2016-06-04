@@ -1,0 +1,8 @@
+#!/bin/bash
+
+#remove existing output files
+rm *~
+rm simulation
+
+gcc simulation.c -o simulation -lm -lgmp
+./simulation

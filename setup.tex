@@ -1,0 +1,72 @@
+\label{setup}
+\subsection{Experimental Setup}
+We conduct the experimental evaluations on the proposed node assignment methods
+(\emph{sequential} and \emph{distributed}) by using three different real-world
+workloads; workload from Hornet Cluster at the University of Connecticut~\cite{hornet},
+parallel workload from IBM-SP2 Cluster at Cornell Theory Center(CTC)~\cite{ctcsp2} and NFS
+workload of a research workload from a university computer science department~\cite{lair62}.
+
+\subsubsection{Workloads}
+\paragraph{Hornet Cluster}
+The Hornet Cluster is a high end cluster consisting of 64 nodes where each node has 12 Intel Xeon X5650
+Westmere cores, 48 GB of RAM and 500 GB of storage. Users submit jobs on this cluster and
+each job is recorded in the log files. For each job, the log files provide the identifier of the
+user who submitted the job, in addition to the submission and completion times. Since the
+initialization of this cluster in August 2011, there have been around 40000 job submissions.
+
+\paragraph{CTC IBM-SP2 Cluster}
+This workload contains parallel job information for the 512-node IBM-SP2 Cluster at Cornell
+Theory Center(CTC). The workload includes jobs submitted between July 1996 and May 1997 and
+for each job, it provides the identifier of the user who submitted the job, in addition to the
+submission and completion times.
+
+\paragraph{LAIR62 NFS Workload}
+This workload includes the NFS transactions for the first nine days of the \textit{LAIR62} workload,
+a research workload from a university computer science department. The workload has information
+about the submission and completion times of each NFS transaction, in addition to the source and
+destination addresses and type of each transaction (response or call). 
+
+\subsubsection{Test Procedure}
+The first step of each test case is to retrieve the necessary information from each workload. A script
+that goes through all the workloads parses the user identifiers and the submission and completion times
+of each job in the Hornet Cluster or CTC IBM-SP2 Cluster. For the LAIR62 NFS workload, the script
+parses the submission and completion times of each transaction, in addition to the source and
+destination addresses of each transaction since the user identifier is not available.
+
+Once the necessary information is parsed from the workloads, a simulation script starts assigning users
+to I/O nodes using the sequential or distributed node assignment methods. It is possible to change the
+total number of nodes, the number of nodes assigned to each user, the assignment method, the inactivity
+threshold and the startup time in this simulation script for various evaluation scenarios.
+
+Once the user assignment to I/O nodes is completed, the simulation script checks whether there is
+any overlap between the jobs or transactions executed on an I/O node. Since we would like to know how
+long each I/O node is going to stay on or off, it is important to handle the overlaps between jobs or
+transactions. Assume Job1 and Job2 are assigned to I/O server $A$. If Job1 starts at time $d1$ and finishes
+at $d2$, and if Job2 starts at $d3$ and finishes $d4$, these two jobs will overlap in time when $d1 < d3$
+and $d3 < d2$. Thus, the total time that I/O node $A$ is kept on will be ($d2$ - $d1$) + ($d4$ - $d3$)
+- $overlap time$.
+
+Finally the simulation script calculates the output information in order to understand how well the
+system is doing in terms of the energy consumption and system utilization. The simulation finds the
+energy consumption and system utilization for various values of the inactivity threshold, startup time,
+total number of nodes and number of nodes assigned to each user as shown in Table~\ref{tbl:params}.
+Power consumption per node is 167 Watts~\cite{knightshift} for LAIR62 NFS workload and 300 Watts
+~\cite{DBLP:journals/computer/BianchiniR04} for Hornet and CTC IBM-SP2 Clusters.
+
+\begin{table}
+  \begin{center}
+    \begin{tabular}{|l|l|} \hline
+Test Parameter & Values \\ \hline
+Total number of nodes                   & 16, 32 or 64 \\ \hline
+Number of nodes assigned                & 2, 4 or 8 \\
+to each user                            & \\ \hline
+Assignment methods                      & Sequential or Distributed \\ \hline
+Low-energy mode                         & Turn Off \\ \hline
+Inactivity threshold                    & Varied between 1000 and 2000000 s \\ \hline
+Startup time                            & 10, 60, 120 or 240 s \\ \hline
+Power consumption per node              & 167, 300 W \\ \hline
+    \end{tabular}
+  \end{center}
+  \caption{Test Parameters}
+  \label{tbl:params}
+\end{table}

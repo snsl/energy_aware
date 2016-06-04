@@ -1,0 +1,6 @@
+#!/bin/sh
+
+pdflatex jcss.tex
+#bibtex jcss.aux
+#pdflatex jcss.tex
+#pdflatex jcss.tex

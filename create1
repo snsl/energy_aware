@@ -1,0 +1,116 @@
+unlink(".RData")
+unlink(".RHistory")
+rm(list=ls())
+
+pdf("result1.pdf", 8.5, 11)
+
+error.bar <- function(x, y, upper, lower=upper, length=0.1, ...) {
+if(length (x) != length (y) | length(y) != length(lower) | length(lower) != length(upper))
+stop("vectors must be same length")
+arrows(x, y+upper, x, y-lower, angle=90, code=3, length=length, ...)
+}
+
+par(mar=c(6.5,6.5,4.1,1.2), oma=c(0,0,4,0), xpd=NA, mfrow=c(3,1))
+
+#---first row---
+par(mgp=c(3,1,0))
+a <- c(12.852, 12.852, 12.852, 12.852, 12.852)
+b <- c(12.818, 12.818, 12.818, 12.818, 12.818)
+c <- c(13.267, 13.267, 13.267, 13.267, 13.267)
+d <- c(12.783, 12.783, 12.783, 12.783, 12.783)
+e <- c(13.104, 13.025, 12.954, 12.968, 13.028)
+f <- c(13.165, 13.165, 13.165, 13.165, 13.165)
+g <- c(14, 14, 14, 14, 14)
+stdevs <- c(sd(a), sd(b), sd(c), sd(d), sd(e), sd(f), sd(g))
+means <- c(mean(a), mean(b), mean(c), mean(d), mean(e), mean(f), mean(g))
+centers <- barplot(means, yaxt='n', cex.names=1.5, beside=TRUE, names.arg=c(
+NA,"Balancing",NA,"Sequential","Random","Groups","Always on"),
+col=c("red", "blue", "green", "magenta", "orange", "brown", "black"),
+space=c(0,0,0,1,1,1,1))
+error.bar(centers, means, 1.96*stdevs/sqrt(5))
+title(xlab="Node allocation techniques", cex.lab=1.5)
+par(mgp=c(3.5,1,0))
+axis(2, las=1, cex.axis=1.5, tck=-.05)
+title(ylab="Total consumption (MWh)", cex.lab=1.5)
+title(main="64 total nodes, 8 allocated for each user, inactivity threshold=300 s, startup time=30 s", cex.main=1.4, font.main = 2, line=3, bty="o", adj=0.5)
+
+par(xpd=T)
+legend("top", inset=-0.15, fill=c("red", "blue", "green"), c("a", "b", "c"), bty="n", ncol=3, cex=1.25, legend=c(
+expression("S"[W]*"=1, T"[W]*"=0, E"[W]*"=0"),
+expression("S"[W]*"=0.5, T"[W]*"=0.5, E"[W]*"=0"),
+expression("S"[W]*"=0, T"[W]*"=1, E"[W]*"=0")))
+par(xpd=F)
+par(new=F)
+
+#---second row---
+par(mar=c(11.0,6.5,0,1.2))
+par(mgp=c(6,4,0))
+a <- c(0.162,0.162,0.162,0.162,0.162)
+b <- c(0.12,0.12,0.12,0.12,0.12)
+c <- c(1.09,1.09,1.09,1.09,1.09)
+d <- c(0.459,0.459,0.459,0.459,0.459)
+e <- c(0.598,0.631,0.667,0.64,0.634)
+f <- c(0.64,0.64,0.64,0.64,0.64)
+a2 <- c(0.15,0.15,0.15,0.15,0.15)
+b2 <- c(0.092,0.092,0.092,0.092,0.092)
+c2 <- c(0.02,0.02,0.02,0.02,0.02)
+d2 <- c(0.108,0.108,0.108,0.108,0.108)
+e2 <- c(0.076,0.104,0.11,0.115,0.107)
+f2 <- c(0.053,0.053,0.053,0.053,0.053)
+x <- 1:6
+stdevs <- c(sd(a), sd(b), sd(c), sd(d), sd(e), sd(f))
+stdevs2 <- c(sd(a2), sd(b2), sd(c2), sd(d2), sd(e2), sd(f2))
+means <- c(mean(a), mean(b), mean(c), mean(d), mean(e), mean(f))
+means2 <- c(mean(a2), mean(b2), mean(c2), mean(d2), mean(e2), mean(f2))
+combined_means <- c(means[1], means2[1], means[2], means2[2], means[3], means2[3], means[4], means2[4], means[5], means2[5], means[6], means2[6])
+combined_stdevs <- c(stdevs[1], stdevs2[1], stdevs[2], stdevs2[2], stdevs[3], stdevs2[3], stdevs[4], stdevs2[4], stdevs[5], stdevs2[5], stdevs[6], stdevs2[6])
+centers <- barplot(combined_means, yaxt='n', cex.names=1.5, beside=TRUE, names.arg=c(expression(atop("        Balancing",
+paste(atop("        S"[W]*"=1","        T"[W]*"=0")))), NA, expression(atop("        Balancing",
+paste(atop("        S"[W]*"=0.5","        T"[W]*"=0.5")))), NA, expression(atop("        Balancing",
+paste(atop("        S"[W]*"=0","        T"[W]*"=1")))), NA, expression(atop("        Sequential",
+paste(atop("","")))), NA, expression(atop("        Random",
+paste(atop("")))), NA, expression(atop("        Grouping",
+paste(atop("")))), NA), col=c("blue", "darkgreen", "blue", "darkgreen", "blue", "darkgreen", "blue", "darkgreen", "blue", "darkgreen", "blue", "darkgreen"),
+ylim=range(c(0,4)),
+space=c(1,0,1,0,1,0,1,0,1,0,1,0))
+
+error.bar(centers, combined_means, 1.96*combined_stdevs/sqrt(5))
+
+title(xlab="Node allocation techniques", cex.lab=1.5)
+par(mgp=c(2.5,1,0))
+axis(2, las=1, cex.axis=1.5, tck=-.05)
+title(ylab="CV of storage space\n and on-time", cex.lab=1.5)
+
+par(xpd=T)
+legend("top", fill=c("blue","darkgreen"), c("CV of storage space", "CV of on-time"), bty="n", cex=1.25, ncol=2)
+par(xpd=F)
+par(new=F)
+
+#---third row---
+par(mar=c(11.0,6.5,0,1.2))
+par(mgp=c(6,4,0))
+a <- c(0.0769,0.0769,0.0769,0.0769,0.0769)
+b <- c(0.152033,0.152033,0.152033,0.152033,0.152033)
+c <- c(0.028103,0.028103,0.028103,0.028103,0.028103)
+d <- c(0.069844,0.069844,0.069844,0.069844,0.069844)
+e <- c(0.065822,0.063745,0.064434,0.059671,0.070462)
+f <- c(0.084519,0.084519,0.084519,0.084519,0.084519)
+x <- 1:6
+stdevs <- c(sd(a), sd(b), sd(c), sd(d), sd(e), sd(f))
+means <- c(mean(a), mean(b), mean(c), mean(d), mean(e), mean(f))
+centers <- barplot(means, yaxt='n', cex.names=1.5, beside=TRUE, names.arg=c(expression(atop("Balancing",
+paste(atop("S"[W]*"=1","T"[W]*"=0")))),expression(atop("Balancing",
+paste(atop("S"[W]*"=0.5","T"[W]*"=0.5")))), expression(atop("Balancing",
+paste(atop("S"[W]*"=0","T"[W]*"=1")))), expression(atop("Sequential",
+paste(atop("","")))),expression(atop("Random",
+paste(atop("")))),expression(atop("Grouping",
+paste(atop(""))))), col=c("darkcyan", "darkcyan", "darkcyan", "darkcyan", "darkcyan", "darkcyan"),
+ylim=range(c(0,2)))
+error.bar(centers, means, 1.96*stdevs/sqrt(5))
+
+title(xlab="Node allocation techniques", cex.lab=1.5)
+par(mgp=c(3.5,1,0))
+axis(2, las=1, cex.axis=1.5, tck=-.05)
+title(ylab="Latency per access (s)", cex.lab=1.5)
+
+dev.off()

@@ -1,0 +1,263 @@
+In this section we give theoretical analysis of the proposed methods in order to learn
+the approximation factor of each to the best possible solution in terms of energy consumption
+or load balancing. We calculate the approximation factor ($C$) of each method by comparing its
+energy consumption or load balancing value with the optimal value. $C$ is the upper bound on the
+worst case performance of our methods; such that, when the optimal solution is multiplied
+by $C$, it is guaranteed to be equal to or greater than solutions provided by our methods.
+$C$ can be formulated as shown in~\eqref{eq_th_zero}.
+
+\begin{equation}
+P_{proposed} <= C * P_{optimum}
+\label{eq_th_zero}
+\end{equation}
+\hfill
+
+where $C$ is the approximation factor, $P_{proposed}$ is the solution provided by one of our
+methods and $P_{optimum}$ is the optimal solution.
+
+\subsection{Load Balancing}
+\subsubsection{Storage Space}
+Our proposed methods try to balance storage space across storage nodes by trying to
+distribute new or transferred users as evenly as possible. We assume that the optimal solution
+knows the storage space usage of each user beforehand; so that, it makes the best decision in 
+terms of storage space balancing when a user comes to the system for the first time or when its
+storage is transferred between the storage nodes.
+
+We assume that there are $N$ cloud storage nodes, where $M$ of them are allocated per user and
+there are $K$ total users using the system. $S_{node}(i)$ represents the total eventual storage space
+usage on storage node $i$, $S_{node}(i)(t)$ represents the total storage space usage
+on storage node $i$ at time $t$ and $S_{user}(i)$ represents the storage space usage of user $i$. The optimal
+solution will distribute users as evenly as possible, such that, the makespan of the cloud storage
+system (maximum storage space usage on a storage node in the entire system) is minimized~\cite{tu_lecture}.
+
+There are two boundaries for the optimal solution. It will either be able to allocate all $N$
+storage nodes or only one storage node per user. We denote these two cases as \textit{Case1}
+and \textit{Case2} and use the maximum of these two as the optimal solution for storage space balancing
+$P_{optimum}$ as shown in Equation~\eqref{eq_th_three}.
+
+\begin{itemize}
+\item \textit{Case1} The optimal solution allocates all $N$ storage nodes per user. In this case,
+the storage space is perfectly distributed and the makespan will be found as shown in Equation~\eqref{eq_th_one}.
+
+\begin{equation}
+P_{optimum1} = \frac{\sum\limits_{i=1}^{K} S_{user}(i)}{N}
+\label{eq_th_one}
+\end{equation}
+\hfill
+
+\item \textit{Case2} The optimal solution allocates only a single storage node per user. In this
+case, the makespan of the storage system will be found as shown in Equation~\eqref{eq_th_two}.
+
+\begin{equation}
+P_{optimum2} = \max{S_{user}(i)},\ \ where\ \ 1 <= i <= K
+\label{eq_th_two}
+\end{equation}
+\hfill
+\end{itemize}
+
+\begin{equation}
+P_{optimum} = \max{P_{optimum1}, P_{optimum2}}
+\label{eq_th_three}
+\end{equation}
+\hfill
+
+When a new or transferred user comes to the cloud storage system, all but two of our proposed
+methods might allocate the storage nodes with maximum storage space usage to this user.
+We denote the solution of these methods as $P_{proposed\_worst}$. The two cases that will try
+to achieve the best possible storage space distribution are balancing technique with storage
+space balancing weight ($S_W$) set to one and Dynamic Greedy scheme that has balancing technique
+as the initial technique with storage space balancing weight again set to one and energy consumption
+weight ($E_W$) set to zero. Similarly, we denote the solution of these two methods as $P_{proposed\_best}$.
+
+We first analyze the approximation factor of $P_{proposed\_best}$. In this case, two methods
+mentioned in the previous paragraph allocate $M$ storage nodes with the minimum storage space usage
+to a user. As it will not affect our theoretical analysis, we assume $ M = 1 $. We also assume that
+storage node $f$ has the biggest storage space usage at time $T_1$ as in Equation~\eqref{eq_th_four}, after
+it was allocated for user $u$ that has a storage space usage of $S_{user}(u)$.
+
+\begin{equation}
+S_{node}(f)(T_1) = \max{S_{node}(i)(T_1)},\ \ where\ \ 1 <= i <= N
+\label{eq_th_four}
+\end{equation}
+\hfill
+
+This means that at time $T_2$ ($T_2 < T_1$), when the decision to allocate storage node $f$ for
+user $u$ was made, node $f$ had the minimum storage space usage in the system as in Equation~\eqref{eq_th_five}.
+
+\begin{equation}
+N * S_{node}(f)(T_2) <= \sum\limits_{i=1}^{N}S_{node}(i)(T_2)
+\label{eq_th_five}
+\end{equation}
+\hfill
+
+As the total storage space in the system at time $T_2$ will be less than the total eventual storage
+space usage, we can infer Equation~\eqref{eq_th_six}.
+
+\begin{equation}
+\sum\limits_{i=1}^{N}S_{node}(i)(T_2) < \sum\limits_{i=1}^{N}S_{node}(i)
+\label{eq_th_six}
+\end{equation}
+\hfill
+
+Another observation we can make is that the total eventual storage space usage on the system
+will be equal to the sum of individiual storage space usage of each user as shown in Equation~\eqref{eq_th_seven}. 
+
+\begin{equation}
+\sum\limits_{i=1}^{N}S_{node}(i) = \sum\limits_{i=1}^{K}S_{user}(i)
+\label{eq_th_seven}
+\end{equation}
+\hfill
+
+And from Equation~\eqref{eq_th_one},~\eqref{eq_th_two} and~\eqref{eq_th_three}, we can infer that;
+
+\begin{equation}
+\sum\limits_{i=1}^{K}S_{user}(i) <= N * P_{optimum}
+\label{eq_th_eight}
+\end{equation}
+\hfill
+
+Therefore, combining Equation~\eqref{eq_th_five},~\eqref{eq_th_six},~\eqref{eq_th_seven} and
+~\eqref{eq_th_eight}, we can obtain;
+
+\begin{equation}
+S_{node}(f)(T_2) < P_{optimum}
+\label{eq_th_nine}
+\end{equation}
+\hfill
+
+We now know that storage node $f$ has the maximum amount of storage space used in the system at
+time $T_1$ and the minimum amount of storage space used in the system at time $T_2$ (before it
+was allocated for user $u$ that has a storage space usage of $S_{user}(u)$). Thus, we can infer
+the equality in Equation~\eqref{eq_th_ten}.
+
+\begin{equation}
+S_{node}(f)(T_1) = S_{node}(f)(T_2) + S_{user}(u)
+\label{eq_th_ten}
+\end{equation}
+\hfill
+
+We can also observe the following from Equation~\eqref{eq_th_one},~\eqref{eq_th_two} and~\eqref{eq_th_three}.
+
+\begin{equation}
+S_{user}(u) <= P_{optimum}
+\label{eq_th_eleven}
+\end{equation}
+\hfill
+
+Therefore, combining Equation~\eqref{eq_th_nine},~\eqref{eq_th_ten} and~\eqref{eq_th_eleven}
+we can see that two of the proposed methods (balancing technique with $S_W = 1$ and
+Dynamic Greedy scheme that has balancing technique as the initial technique $S_W = 1$ and
+$E_W = 0$) have an approximation factor of 2 in the best case.
+
+\begin{equation}
+P_{proposed\_best} = S_{node}(f)(T_1) < 2 * P_{optimum}
+\label{eq_th_twelve}
+\end{equation}
+\hfill
+
+We now analyze the approximation factor of other methods, $P_{proposed\_worst}$. These methods
+might allocate $M$ storage nodes with the maximum storage space usage to a user in the worst case. We again
+assume $ M = 1 $ as it will not change the theoretical analysis. The theoretical analysis of $P_{proposed\_worst}$
+will be similar to that of $P_{proposed\_best}$. In fact, the only difference will be to Equation~\eqref{eq_th_five},
+as the storage node with the maximum storage usage at time $T_2$ will definitely have storage space usage less
+than or equal to the total storage space of all nodes as shown in Equation~\eqref{eq_th_thirteen}.
+
+\begin{equation}
+S_{node}(f)(T_2) <= \sum\limits_{i=1}^{N}S_{node}(i)(T_2)
+\label{eq_th_thirteen}
+\end{equation}
+\hfill
+
+This will change Equation~\eqref{eq_th_nine} as follows;
+
+\begin{equation}
+S_{node}(f)(T_2) < N * P_{optimum}
+\label{eq_th_fourteen}
+\end{equation}
+\hfill
+
+Therefore, we can see that the proposed methods have an approximation ratio of $N + 1$ in the worst case, where
+$N$ is the total number of storage nodes in the system.
+
+\begin{equation}
+P_{proposed\_worst} = S_{node}(f)(T_1) < (N + 1) * P_{optimum}
+\label{eq_th_fifteen}
+\end{equation}
+\hfill
+
+\subsubsection{On-Time}
+Theoretical analysis of our proposed methods in terms of balancing on-time across storage
+nodes will be exactly the same as the theoretical analysis of balancing storage space; except
+for the following;
+
+\begin{itemize}
+\item On-time information will be used instead of storage space.
+\item Techniques producing $P_{proposed\_best}$ and $P_{proposed\_worst}$
+will be different.
+\end{itemize}
+
+The balancing technique with on-time balancing weight ($T_W$) set to one and Dynamic Greedy scheme
+that has balancing technique as the initial technique with on-time balancing weight set to one
+and energy weight ($E_W$) set to zero will produce a 2-approximation $P_{proposed\_best}$ solution,
+whereas other methods will produce an (N + 1)-approximation $P_{proposed\_worst}$ solution
+compared to the optimal solution in terms of balancing on-time.
+
+\subsection{Energy Consumption}
+We compare the energy consumption of the proposed methods with that of the
+optimal solution in order to find the approximation factor of each. We assume
+again there are $N$ storage nodes in the system and $M$ of them are allocated
+for each user. The theoretical model for the energy consumption is based
+on \textit{interjob} times that were described earlier in Section~\ref{model}.
+
+In the best case, the storage node that is allocated for a user by our proposed
+methods will be already on. In this case, there will not be any difference
+between the optimal solution and the solution provided by our provided methods.
+
+The worst case for any of the methods we propose will be when all of the
+storage nodes have been turned off due to staying inactive for longer than
+the inactivity threshold; such that, a job submitted to the $M$ storage nodes
+at this time will experience latency equal to $T_I + T_S$ regardless
+of the method we are using. $T_I$ represents the inactivity threshold and
+$T_S$ represents the startup time of a storage node.
+
+On the other hand, the optimal solution knows when an idle period will begin and
+end. Therefore, it can turn off a storage node without waiting for the inactivity
+threshold to elapse. As a result, $P_{proposed}$, $P_{optimum}$ and $C$ can be
+formulated as shown in Equation~\eqref{eq_th_sixteen}, \eqref{eq_th_seventeen}
+and \eqref{eq_th_eighteen}.
+
+\begin{equation}
+P_{proposed} = \sum\limits_{i=1}^{M} (T_{I} + T_{S})
+\label{eq_th_sixteen}
+\end{equation}
+\hfill
+
+\begin{equation}
+P_{optimum} = \sum\limits_{i=1}^{M} T_{S}
+\label{eq_th_seventeen}
+\end{equation}
+\hfill
+
+\begin{equation}
+\begin{gathered}
+C >= \frac{(T_{I} + T_{S})}{T_{S}} \\
+C >= \frac{(k * T_{S} + T_{S})}{T_{S}} = k + 1,\ \ where\ \ k = \frac{T_{I}}{T_{S}}
+\label{eq_th_eighteen}
+\end{gathered}
+\end{equation}
+\hfill
+
+Consequently, if any of our methods use an inactivity threshold ($T_{I}$) value
+equal to the startup time ($T_{S}$), the approximation factor will be 2.
+
+%\subsection{Latency}
+%Our approaches do not keep track of the latency in the storage system and make node
+%allocation decisions accordingly. Since minimizing latency is not one of the objective
+%functions of our proposed methods, there will not be any approximation factor
+%to an optimal solution where latency is minimized. We note that the maximum latency
+%observed by a job in our proposed methods cannot be larger than the startup time ($T_S$).
+%On the other hand, we have seen that a job in the optimal solution for load balancing or
+%energy consumption can also observe a latency of $T_S$. Additionally, we have shown
+%the actual latency per access to be much lower than $T_S$ in Section~\ref{results}.
+%As discussed in Section~\ref{intro}, latency effects can be hidden too, if it is known
+%a priori which nodes are going to be used at any time.

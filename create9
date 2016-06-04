@@ -1,0 +1,79 @@
+unlink(".RData")
+unlink(".RHistory")
+rm(list=ls())
+
+pdf("result9.pdf", 8.5, 11)
+
+error.bar <- function(x, y, upper, lower=upper, length=0.075, ...) {
+if(length (x) != length (y) | length(y) != length(lower) | length(lower) != length(upper))
+stop("vectors must be same length")
+arrows(x, y+upper, x, y-lower, angle=90, code=3, length=length, ...)
+}
+
+par(mar=c(6.5,6.5,4.1,1.2), oma=c(0,0,4,0), xpd=NA, mfrow=c(3,1))
+
+#---first row---
+par(mgp=c(3,1,0))
+a1 <- c(12.818,12.818,12.818,12.818,12.818)
+b1 <- c(12.818,12.818,12.818,12.818,12.818)
+c1 <- c(12.681,12.681,12.681,12.681,12.681)
+d1 <- c(14,14,14,14,14)
+stdevs <- c(sd(a1), sd(b1), sd(c1), sd(d1))
+means <- c(mean(a1), mean(b1), mean(c1), mean(d1))
+centers <- barplot(means, yaxt='n', cex.names=1.25, beside=F, names.arg=c(
+"Fixed Scheme","Dynamic Greedy Scheme","Correlation-Based Scheme", "Always on"),
+, col=c("red", "magenta", "orange", "black"),
+space=c(1,1,1,1))
+error.bar(centers, means, 1.96*stdevs/sqrt(5))
+title(xlab="Node allocation method", cex.lab=1.5)
+par(mgp=c(3.5,1,0))
+axis(2, las=1, cex.axis=1.5, tck=-.05)
+title(ylab="Total consumption (MWh)", cex.lab=1.5)
+title(main=expression(atop(paste(bold("64 total nodes, 8 allocated for each user, inactivity threshold=300 s, startup time=30 s")),paste(bold("evaluations done every 2 days, last 6 hours checked at every evaluation, similarity threshold is 1 hour")))), cex.main=1.4, font.main = 2, line=4, bty="o", adj=0.5)
+title(sub="(a) Google trace", cex.sub=2, line=5)
+
+par(new=F)
+
+#---second row---
+par(mgp=c(3,1,0))
+a1 <- c(195.646,195.646,195.646,195.646,195.646)
+b1 <- c(195.646,195.646,195.646,195.66,195.646)
+c1 <- c(159.43,159.43,159.43,159.43,159.43)
+d1 <- c(354,354,354,354,354)
+stdevs <- c(sd(a1), sd(b1), sd(c1), sd(d1))
+means <- c(mean(a1), mean(b1), mean(c1), mean(d1))
+centers <- barplot(means, yaxt='n', cex.names=1.25, beside=F, names.arg=c(
+"Fixed Scheme","Dynamic Greedy Scheme","Correlation-Based Scheme", "Always on"),
+, col=c("red", "magenta", "orange", "black"),
+space=c(1,1,1,1))
+error.bar(centers, means, 1.96*stdevs/sqrt(5))
+title(xlab="Node allocation method", cex.lab=1.5)
+par(mgp=c(3.5,1,0))
+axis(2, las=1, cex.axis=1.5, tck=-.05)
+title(ylab="Total consumption (MWh)", cex.lab=1.5)
+title(sub="(b) Hornet cluster", cex.sub=2, line=5)
+
+par(new=F)
+
+#---third row---
+par(mgp=c(3,1,0))
+a1 <- c(216.149,216.149,216.149,216.149,216.149)
+b1 <- c(213.318,213.318,213.318,213.318,213.318)
+c1 <- c(208.351,208.351,208.351,208.351,208.351)
+d1 <- c(424,424,424,424,424)
+stdevs <- c(sd(a1), sd(b1), sd(c1), sd(d1))
+means <- c(mean(a1), mean(b1), mean(c1), mean(d1))
+centers <- barplot(means, yaxt='n', cex.names=1.25, beside=F, names.arg=c(
+"Fixed Scheme","Dynamic Greedy Scheme","Correlation-Based Scheme", "Always on"),
+, col=c("red", "magenta", "orange", "black"),
+space=c(1,1,1,1))
+error.bar(centers, means, 1.96*stdevs/sqrt(5))
+title(xlab="Node allocation method", cex.lab=1.5)
+par(mgp=c(3.5,1,0))
+axis(2, las=1, cex.axis=1.5, tck=-.05)
+title(ylab="Total consumption (MWh)", cex.lab=1.5)
+title(sub="(c) GRID5000 workload", cex.sub=2, line=5)
+
+par(new=F)
+
+dev.off()

@@ -1,0 +1,47 @@
+In this work, we presented three different energy-aware node allocation
+methods that take advantage of storage network incasting and exploit user
+metadata for allocating cloud storage system resources for each user, while
+adhering to load-balancing parameters on demand. We also presented a mathematical
+model to estimate the outcome of the proposed methods and showed that the estimations
+of this model closely match with the simulation results. Each method has been
+evaluated both theoretically and through simulation-based tests using real-world
+workloads. Theoretical analysis results show that our proposed methods
+can provide 2-approximation solutions for minimizing energy consumption
+and balancing system load (storage space usage or on-time). Simulation-based
+tests show that the energy savings are as high as 60\%. The simulation-based 
+tests further show that as the storage system moves from the Fixed scheme to
+Dynamic Greedy scheme and then to Correlation-Based scheme, energy savings, latency
+per access and coefficient of variation of the storage space and on-time increase. Therefore,
+these schemes can be implemented in a cloud storage system depending on parameters
+of importance (energy consumption, latency or load balancing). As an example, in
+a storage system where energy consumption is the primary concern, Correlation-Based
+scheme can be used. Similarly, in a storage system where load balancing and energy consumption
+are equally important, Dynamic Greedy scheme can be used. We should also point
+out that the latency per access values for any of the methods we proposed were
+usually less than a second, which should be acceptable for most of the cloud
+storage applications.
+
+Our methods are different from related studies as we classify and place users; rather
+than classifying and placing data. Additionally,
+the methods we propose take load-balancing and data transfer costs into account,
+which is not included in many related studies. We also have a lightweight algorithm
+to predict future which is another concept that is missing in related studies, as
+they mostly try to predict future reactively by monitoring the system with complex
+mechanisms and possibly introducing overhead as a result of this.
+
+The methods we presented in this work can be implemented in any type of general
+storage system; including archival and parallel HPC storage systems. We evaluated
+these methods with theoretical and simulation-based evaluations. A more insightful
+evaluation of these methods can be conducted on a real cloud storage system. The
+proposed methods were tested with up to 64 storage nodes, where 8 storage nodes at
+maximum were allocated per user. Additionally, the workloads we used had at most
+645 users. In a real implementation these numbers might be different; therefore,
+further evaluation in a real storage system with different workloads would be also
+helpful in this respect. Moreover, we assumed that the low-energy mode for a
+storage node is turning it off completely. We are aware that modern disks support
+various operating modes with different power requirements; therefore, it would be
+interesting to evaluate our methods with disks supporting multiple operating modes.
+Future research directions also include implementing the proposed methods with various
+types of user-metadata other than the ones used in this work (system usage patterns,
+user identifiers etc.) and to investigate the effectiveness of the proposed methods
+in a storage system with mechanisms already preventing incasting.

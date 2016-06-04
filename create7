@@ -1,0 +1,100 @@
+unlink(".RData")
+unlink(".RHistory")
+rm(list=ls())
+
+pdf("result7.pdf", 8.5, 11)
+
+error.bar <- function(x, y, upper, lower=upper, length=0.075, ...) {
+if(length (x) != length (y) | length(y) != length(lower) | length(lower) != length(upper))
+stop("vectors must be same length")
+arrows(x, y+upper, x, y-lower, angle=90, code=3, length=length, ...)
+}
+
+par(mar=c(6.5,6.5,4.1,1.2), oma=c(0,0,4,0), xpd=NA, mfrow=c(3,1))
+ 
+#---first row---
+par(mgp=c(3,1,0))
+a1 <- c(178.676,178.676,178.676,178.676,178.676)
+a2 <- c(186.514,186.514,186.514,186.514,186.514)
+a3 <- c(176.977,176.977,176.977,176.977,176.977)
+b1 <- c(169.697,169.697,169.697,169.697,169.697)
+c1 <- c(169.03,174.147,172.576,169.236,176.065)
+d1 <- c(177.248,177.248,177.248,177.248,177.248)
+e <- c(424,424,424,424,424)
+stdevs <- c(sd(a1), sd(a2), sd(a3), sd(b1), sd(c1), sd(d1), sd(e))
+means <- c(mean(a1), mean(a2), mean(a3), mean(b1), mean(c1), mean(d1), mean(e))
+centers <- barplot(means, yaxt='n', cex.names=1.25, beside=F, names.arg=c(
+NA,"Balancing",NA,"Sequential","Random","Groups","Always on"),
+, col=c("red", "blue", "green", "magenta", "orange", "brown", "black"),
+space=c(0,0,0,1,1,1,1))
+error.bar(centers, means, 1.96*stdevs/sqrt(5))
+title(xlab="Initial node allocation technique", cex.lab=1.5)
+par(mgp=c(3.5,1,0))
+axis(2, las=1, cex.axis=1.5, tck=-.05)
+title(ylab="Total consumption (MWh)", cex.lab=1.5)
+title(main=expression(atop(paste(bold("64 total nodes, 8 allocated for each user, inactivity threshold=300 s, startup time=30 s")),paste(bold("evaluations done every 2 days, last 6 hours checked at every evaluation, similarity threshold is 1 hour")))), cex.main=1.4, font.main = 2, line=4, bty="o", adj=0.5)
+
+par(xpd=T)
+legend("top", fill=c("red", "blue", "green"), c("a", "b", "c"), bty="n", ncol=3, cex=1.25, legend=c(
+expression("S"[W]*"=1, T"[W]*"=0, E"[W]*"=0"), 
+expression("S"[W]*"=0.5, T"[W]*"=0.5, E"[W]*"=0"),
+expression("S"[W]*"=0, T"[W]*"=1, E"[W]*"=0")))
+par(xpd=F)
+par(new=F)
+
+#---second row---
+par(mar=c(11.0,6.5,0,1.2))
+par(mgp=c(6,4,0))
+a1 <- c(0.257,0.257,0.257,0.257,0.257)
+a2 <- c(0.226,0.226,0.226,0.226,0.226)
+a3 <- c(0.616,0.616,0.616,0.616,0.616)
+a4 <- c(0.36,0.36,0.36,0.36,0.36)
+a5 <- c(0.315,0.315,0.315,0.315,0.315)
+a6 <- c(0.247,0.247,0.247,0.247,0.247)
+stdevs <- c(sd(a1), sd(a2), sd(a3))
+stdevs2 <- c(sd(a4), sd(a5), sd(a6))
+means <- c(mean(a1), mean(a2), mean(a3))
+means2 <- c(mean(a4), mean(a5), mean(a6))
+combined_means <- c(means[1], means2[1], means[2], means2[2], means[3], means2[3])
+combined_stdevs <- c(stdevs[1], stdevs2[1], stdevs[2], stdevs2[2], stdevs[3], stdevs2[3])
+centers <- barplot(combined_means, yaxt='n', cex.names=1.5, beside=TRUE,
+names.arg=c(
+expression(atop("                      Balancing", paste(atop("                                  S"[W]*"=1, T"[W]*"=0", "                                E"[W]*"=0")))), NA,
+expression(atop("                      Balancing", paste(atop("                                  S"[W]*"=0.5, T"[W]*"=0.5", "                                E"[W]*"=0")))), NA,
+expression(atop("                      Balancing", paste(atop("                                  S"[W]*"=0, T"[W]*"=1", "                                E"[W]*"=0")))), NA),
+col=c("blue", "darkgreen", "blue", "darkgreen", "blue", "darkgreen"), ylim=c(0,4), space=c(1,0,1,0,1,0))
+error.bar(centers, combined_means, 1.96*combined_stdevs/sqrt(5))
+
+title(xlab="Initial node allocation technique", cex.lab=1.5)
+par(xpd=F)
+par(mgp=c(2.5,1,0))
+axis(2, las=1, cex.axis=1.5, tck=-.05)
+title(ylab="CV of storage space\n and on-time", cex.lab=1.5)
+par(xpd=T)
+legend("top", fill=c("blue","darkgreen"), c("CV of storage space", "CV of on-time"), bty="n", cex=1.25, ncol=2)
+par(xpd=F)
+par(new=F)
+
+#---third row---
+par(mar=c(11.0,6.5,0,1.2))
+par(mgp=c(6,4,0))
+a1 <- c(0.464565,0.464565,0.464565,0.464565,0.464565)
+a2 <- c(0.643374,0.643374,0.643374,0.643374,0.643374)
+a3 <- c(0.557417,0.557417,0.557417,0.557417,0.557417)
+stdevs <- c(sd(a1), sd(a2), sd(a3))
+means <- c(mean(a1), mean(a2), mean(a3))
+centers <- barplot(means, yaxt='n', cex.names=1.5, beside=TRUE,
+names.arg=c(
+expression(atop("Balancing", paste(atop("S"[W]*"=1, T"[W]*"=0", "E"[W]*"=0")))),
+expression(atop("Balancing", paste(atop("S"[W]*"=0.5, T"[W]*"=0.5", "E"[W]*"=0")))),
+expression(atop("Balancing", paste(atop("S"[W]*"=0, T"[W]*"=1", "E"[W]*"=0"))))),
+col=c("darkcyan", "darkcyan", "darkcyan"), ylim=c(0,2))
+error.bar(centers, means, 1.96*stdevs/sqrt(5))
+
+title(xlab="Initial node allocation technique", cex.lab=1.5)
+par(xpd=F)
+par(mgp=c(3.5,1,0))
+axis(2, las=1, cex.axis=1.5, tck=-.05)
+title(ylab="Latency per\naccess (s)", cex.lab=1.5)
+
+dev.off()

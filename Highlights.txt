@@ -1,0 +1,3 @@
+Mechanisms to reduce cloud storage energy consumption by around 60%
+Dynamic and static storage allocation methods based on user metadata
+Analytical model and experimental evaluations of the proposed methods

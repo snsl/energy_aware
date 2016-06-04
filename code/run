@@ -1,0 +1,27 @@
+#!/bin/bash
+
+#remove existing output files
+rm *~
+rm checklog
+rm job_clean_times_by_ids
+rm job_new_times_by_ids
+rm job_start_times_by_ids
+rm job_start_accept_times_by_ids
+rm job_execute_times_by_ids
+rm job_status_times_by_ids
+rm job_new_user_ids_by_ids
+rm job_new_submit_from_host_by_ids
+rm hosts_to_work_on
+rm job_move_times_by_ids
+rm job_move_user_ids_by_ids
+rm job_signal_times_by_ids
+rm job_signal_user_ids_by_ids
+rm job_requeue_times_by_ids
+rm job_finish_times_by_ids
+rm job_finish_user_ids_by_ids
+rm job_finish_submission_time_by_ids
+rm job_finish_dispatch_time_by_ids
+rm job_finish_from_host_by_ids
+
+gcc checklog.c -o checklog -lm
+./checklog
